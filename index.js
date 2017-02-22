@@ -28,7 +28,6 @@ var cache;
 module.exports = function (thePouchDB) {
   PouchDB = thePouchDB;
   local = new PouchDB('_users');
-
   return Auth.useAsAuthenticationDB.call(local)
     .then(invalidateCache)
     .then(function () {
@@ -84,6 +83,7 @@ api.seamlessSession = function (opts, callback) {
 };
 
 api.seamlessLogIn = function (username, password, opts, callback) {
+
   var args = parseArgs(opts, callback);
   var promise = callFromAvailableSource('logIn', username, password, args.opts)
     .then(startReplication.bind(null, username))
@@ -112,12 +112,24 @@ api.seamlessSignUp = function (username, password, opts, callback) {
   return promise;
 };
 
+
+api.seamlessGetUser = function (username, opts, callback) {
+  var args = parseArgs(opts, callback);
+  var promise = callFromAvailableSource('getUser', username, args.opts)
+    .then(startReplication.bind(null, username))
+    .then(invalidateCache)
+    .then(returnResp);
+  nodify(promise, args.callback);
+  return promise;
+};
+
 function callFromAvailableSource(name/*, arg1, ...*/) {
   var args = Array.prototype.slice.call(arguments, 1);
   return Promise.resolve()
     .then(function () {
       // promisifies the 'undefined has no attribute apply' error too when in a
       // then-function instead of on top.
+      
       return remote[name].apply(remote, args);
     })
     .then(function (resp) {
