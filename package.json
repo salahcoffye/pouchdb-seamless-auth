@@ -25,7 +25,7 @@
     "pouchdb-promise": "^0.0.0",
     "extend": "^3.0.0",
     "promise-nodify": "^1.0.0",
-    "git://github.com/salahcoffye/pouchdb-auth.git#67d69ff409bc2a5a2dffcf3a3412e15f1c6b6558": "^2.1.1",
+    "pouchdb-auth" : "git://github.com/salahcoffye/pouchdb-auth.git"
   },
   "devDependencies": {
     "pouchdb-plugin-helper": "^3.0.0"
